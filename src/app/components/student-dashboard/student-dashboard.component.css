@@ -1,0 +1,40 @@
+:host { display: block; }
+.quick-trip { min-height: 330px; overflow: hidden; position: relative; display: grid; grid-template-columns: 1fr .9fr; background: linear-gradient(145deg, #fff 0%, #f8fbfe 100%); }
+.quick-copy { padding: clamp(26px, 4vw, 42px); align-self: center; position: relative; z-index: 2; }
+.quick-copy > span { color: var(--orange); font-size: .68rem; font-weight: 850; letter-spacing: .12em; }
+.quick-copy h2 { margin: 10px 0 10px; max-width: 390px; color: var(--navy); font-size: clamp(1.45rem, 2.2vw, 2.1rem); line-height: 1.08; letter-spacing: -.035em; }
+.quick-copy p { margin: 0 0 22px; max-width: 430px; color: var(--muted); font-size: .8rem; line-height: 1.65; }
+.quick-visual { position: relative; min-height: 300px; background: radial-gradient(circle at 50% 50%, #e8f2fb 0 32%, transparent 33%), linear-gradient(135deg, transparent 0 48%, #e6edf4 49% 52%, transparent 53%); }
+.quick-visual::before, .quick-visual::after { content: ''; position: absolute; border-radius: 50%; border: 1px dashed #bdd1e2; }
+.quick-visual::before { width: 230px; height: 230px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.quick-visual::after { width: 150px; height: 150px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.pin { position: absolute; left: 27%; top: 28%; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--orange); color: transparent; box-shadow: 0 8px 18px rgba(255,149,24,.25); }
+.car { position: absolute; right: 23%; bottom: 28%; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 16px; background: var(--blue); box-shadow: 0 12px 24px rgba(16,75,134,.22); }
+.recent-panel { min-height: 330px; }
+.recent-trip { display: grid; gap: 10px; }
+.recent-trip .status-pill { justify-self: start; }
+.recent-trip > strong { color: var(--navy); font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-trip > small { color: var(--muted); }
+.recent-trip > div { margin-top: 8px; padding-top: 13px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; color: var(--muted); font-size: .76rem; }
+.recent-trip b { color: var(--orange-700); }
+.trip-history { overflow: hidden; }
+.trip-row { min-height: 64px; padding: 0 18px; display: grid; grid-template-columns: 100px minmax(180px, 1.6fr) 150px 100px 90px 110px; gap: 12px; align-items: center; border-bottom: 1px solid var(--border); font-size: .74rem; }
+.trip-row:last-child { border-bottom: 0; }
+.trip-row > strong, .trip-row > b { color: var(--navy); }
+.trip-head { min-height: 46px; color: var(--muted); background: #f9fbfd; font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.destination-cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status-pill { font-style: normal; }
+.profile-grid { display: grid; grid-template-columns: minmax(280px, .65fr) minmax(0, 1.35fr); gap: 16px; }
+.profile-card { padding: 34px 24px; text-align: center; }
+.large-avatar { width: 84px; height: 84px; margin: 0 auto 16px; display: grid; place-items: center; border-radius: 24px; background: linear-gradient(135deg, var(--blue), #2d75b3); color: #fff; font-size: 2rem; font-weight: 850; }
+.profile-card h2 { margin: 0; color: var(--navy); font-size: 1.05rem; }
+.profile-card p { margin: 6px 0 18px; color: var(--muted); font-size: .75rem; }
+.profile-tags { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; }
+.profile-tags span { padding: 7px 10px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-size: .68rem; font-weight: 800; }
+.detail-list { display: grid; }
+.detail-list > div { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--border); }
+.detail-list > div span { color: var(--muted); font-size: .72rem; }
+.detail-list > div strong { color: var(--navy); font-size: .75rem; text-align: right; overflow-wrap: anywhere; }
+.detail-list .danger-button { margin-top: 20px; justify-self: start; }
+@media (max-width: 1100px) { .quick-trip { grid-template-columns: 1fr; } .quick-visual { display: none; } .recent-panel { min-height: auto; } .trip-history { overflow-x: auto; } .trip-row { min-width: 830px; } }
+@media (max-width: 780px) { .profile-grid { grid-template-columns: 1fr; } .quick-trip { min-height: auto; } .quick-copy { padding: 28px 22px; } }

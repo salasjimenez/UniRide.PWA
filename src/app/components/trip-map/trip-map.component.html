@@ -1,0 +1,45 @@
+<section class="trip-layout">
+  <div class="map-panel panel">
+    <div class="panel-header map-header">
+      <div>
+        <h2>Mapa del viaje</h2>
+        <p>Usa tu ubicación actual o selecciona el destino en el mapa.</p>
+      </div>
+      <button type="button" class="ghost-button compact" (click)="locateMe()" [disabled]="busy">⌖ Mi ubicación</button>
+    </div>
+    <div #mapCanvas class="map-canvas" aria-label="Mapa para solicitar viaje"></div>
+  </div>
+
+  <div class="route-panel panel">
+    <div class="panel-header">
+      <div>
+        <h2>Configurar viaje</h2>
+        <p>Calcula distancia, tiempo y tarifa estimada.</p>
+      </div>
+    </div>
+    <div class="panel-body route-form">
+      <label>Origen</label>
+      <div class="location-input readonly"><span>●</span><input [value]="originText" readonly></div>
+
+      <label for="destination">Destino</label>
+      <div class="location-input"><span>◆</span><input id="destination" [(ngModel)]="destinationText" placeholder="Escribe una dirección o toca el mapa"></div>
+
+      <div class="route-actions">
+        <button type="button" class="secondary-button" (click)="calculateRoute()" [disabled]="busy">
+          {{ busy ? 'Calculando...' : 'Calcular ruta' }}
+        </button>
+        <button type="button" class="ghost-button" (click)="resetTrip()">Limpiar</button>
+      </div>
+
+      <p class="route-message" *ngIf="statusMessage">{{ statusMessage }}</p>
+
+      <div class="route-summary" *ngIf="draft as current">
+        <div><span>Distancia</span><strong>{{ current.distanceKm | number:'1.1-2' }} km</strong></div>
+        <div><span>Tiempo</span><strong>{{ current.durationMin | number:'1.0-0' }} min</strong></div>
+        <div class="fare"><span>Tarifa</span><strong>S/ {{ current.fare | number:'1.2-2' }}</strong></div>
+      </div>
+
+      <button *ngIf="draft" type="button" class="primary-button confirm-button" (click)="confirmTrip()">Confirmar viaje <span>→</span></button>
+    </div>
+  </div>
+</section>

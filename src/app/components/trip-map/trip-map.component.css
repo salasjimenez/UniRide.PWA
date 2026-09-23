@@ -1,0 +1,27 @@
+:host { display: block; }
+.trip-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, .55fr); gap: 16px; }
+.map-panel, .route-panel { overflow: hidden; }
+.map-header { min-height: 74px; }
+.compact { min-height: 38px; padding: 0 12px; }
+.map-canvas { width: 100%; height: clamp(420px, 57vh, 620px); background: #eaf0f5; }
+.route-form label { display: block; margin: 14px 0 7px; color: var(--text-soft); font-size: .72rem; font-weight: 800; }
+.route-form label:first-child { margin-top: 0; }
+.location-input { height: 48px; border: 1px solid var(--border-strong); border-radius: 13px; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: #fff; }
+.location-input:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(16,75,134,.09); }
+.location-input > span { color: var(--orange); font-size: .78rem; }
+.location-input:first-of-type > span { color: var(--blue); }
+.location-input input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--text); background: transparent; font-size: .8rem; }
+.location-input.readonly { background: var(--surface-soft); }
+.location-input.readonly input { color: var(--muted); }
+.route-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 18px; }
+.route-message { margin: 14px 0 0; padding: 10px 12px; border-radius: 11px; color: var(--blue); background: var(--blue-50); font-size: .72rem; line-height: 1.4; }
+.route-summary { margin-top: 18px; border: 1px solid var(--border); border-radius: 15px; overflow: hidden; }
+.route-summary div { min-height: 54px; padding: 10px 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); }
+.route-summary div:last-child { border-bottom: 0; }
+.route-summary span { color: var(--muted); font-size: .7rem; }
+.route-summary strong { color: var(--navy); font-size: .82rem; }
+.route-summary .fare { background: var(--orange-50); }
+.route-summary .fare strong { color: var(--orange-700); font-size: 1rem; }
+.confirm-button { width: 100%; justify-content: center; margin-top: 14px; }
+@media (max-width: 1080px) { .trip-layout { grid-template-columns: 1fr; } .map-canvas { height: 430px; } }
+@media (max-width: 600px) { .map-canvas { height: 360px; } .map-header { align-items: flex-start; } .map-header p { display: none; } .route-actions { grid-template-columns: 1fr; } .route-actions .ghost-button { justify-content: center; } }

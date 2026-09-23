@@ -1,0 +1,91 @@
+<div class="dashboard-shell" *ngIf="session() as current">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/Logo_UniRide.webp" alt="UniRide">
+      <div><strong>UniRide</strong><small>Movilidad universitaria</small></div>
+    </div>
+    <div class="sidebar-context">
+      <span>Sesión actual</span>
+      <strong>{{ campusLabel() }} · Estudiante</strong>
+    </div>
+    <nav class="sidebar-nav" aria-label="Navegación de estudiante">
+      <button class="nav-button" [class.active]="section() === 'inicio'" (click)="open('inicio')"><span class="nav-icon">⌂</span>Inicio</button>
+      <button class="nav-button" [class.active]="section() === 'viaje'" (click)="open('viaje')"><span class="nav-icon">↗</span>Solicitar viaje</button>
+      <button class="nav-button" [class.active]="section() === 'historial'" (click)="open('historial')"><span class="nav-icon">≡</span>Mis viajes</button>
+      <button class="nav-button" [class.active]="section() === 'perfil'" (click)="open('perfil')"><span class="nav-icon">○</span>Mi perfil</button>
+    </nav>
+    <div class="sidebar-bottom"><button class="nav-button" (click)="logout()"><span class="nav-icon">↪</span>Cerrar sesión</button></div>
+  </aside>
+
+  <div class="dashboard-area">
+    <header class="dashboard-topbar">
+      <div class="topbar-title"><small>Panel del estudiante</small><strong>{{ campusLabel() }}</strong></div>
+      <div class="topbar-profile"><div class="profile-meta"><strong>Estudiante</strong><small>{{ current.email }}</small></div><div class="profile-avatar">{{ initials() }}</div></div>
+    </header>
+
+    <main class="dashboard-content">
+      <ng-container [ngSwitch]="section()">
+        <section *ngSwitchCase="'inicio'">
+          <div class="page-heading"><div><h1>Hola, estudiante</h1><p>Gestiona tu movilidad desde un solo lugar.</p></div><span class="context-badge">{{ campusLabel() }}</span></div>
+
+          <div class="metrics-grid">
+            <article class="metric-card"><div class="metric-icon">↗</div><strong>{{ trips().length }}</strong><span>Viajes registrados</span></article>
+            <article class="metric-card"><div class="metric-icon">✓</div><strong>{{ confirmedTrips() }}</strong><span>Viajes confirmados</span></article>
+            <article class="metric-card"><div class="metric-icon">S/</div><strong>S/ {{ totalSpent() | number:'1.2-2' }}</strong><span>Total estimado</span></article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel quick-trip">
+              <div class="quick-copy">
+                <span>VIAJA CON UNIRIDE</span>
+                <h2>¿Listo para tu próximo viaje?</h2>
+                <p>Ubica tu punto de partida, elige el destino y revisa la tarifa antes de confirmar.</p>
+                <button class="primary-button" (click)="open('viaje')">Solicitar viaje <span>→</span></button>
+              </div>
+              <div class="quick-visual" aria-hidden="true"><div class="road"></div><div class="pin">●</div><div class="car">🚙</div></div>
+            </article>
+
+            <article class="panel recent-panel">
+              <div class="panel-header"><div><h2>Último movimiento</h2><p>Actividad reciente de tu cuenta.</p></div></div>
+              <div class="panel-body" *ngIf="trips()[0] as trip; else noTrips">
+                <div class="recent-trip"><span class="status-pill confirmed">{{ trip.status }}</span><strong>{{ trip.destinationLabel }}</strong><small>{{ trip.createdAt | date:'dd/MM/yyyy · HH:mm' }}</small><div><span>{{ trip.distanceKm | number:'1.1-2' }} km</span><b>S/ {{ trip.fare | number:'1.2-2' }}</b></div></div>
+              </div>
+              <ng-template #noTrips><div class="empty-state"><div><strong>Aún no tienes viajes</strong><span>Tu primer viaje aparecerá aquí.</span></div></div></ng-template>
+            </article>
+          </div>
+        </section>
+
+        <section *ngSwitchCase="'viaje'">
+          <div class="page-heading"><div><h1>Solicitar viaje</h1><p>Calcula tu ruta y confirma cuando estés listo.</p></div><span class="context-badge">{{ campusLabel() }}</span></div>
+          <app-trip-map [campus]="current.campus" (tripConfirmed)="onTripConfirmed($event)" />
+        </section>
+
+        <section *ngSwitchCase="'historial'">
+          <div class="page-heading"><div><h1>Mis viajes</h1><p>Consulta los viajes guardados en este dispositivo.</p></div><span class="context-badge">{{ trips().length }} registros</span></div>
+          <div class="panel trip-history" *ngIf="trips().length; else historyEmpty">
+            <div class="trip-row trip-head"><span>Viaje</span><span>Destino</span><span>Fecha</span><span>Distancia</span><span>Tarifa</span><span>Estado</span></div>
+            <div class="trip-row" *ngFor="let trip of trips()">
+              <strong>{{ trip.id }}</strong><span class="destination-cell">{{ trip.destinationLabel }}</span><span>{{ trip.createdAt | date:'dd/MM/yyyy HH:mm' }}</span><span>{{ trip.distanceKm | number:'1.1-2' }} km</span><b>S/ {{ trip.fare | number:'1.2-2' }}</b><span><i class="status-pill confirmed">{{ trip.status }}</i></span>
+            </div>
+          </div>
+          <ng-template #historyEmpty><div class="panel empty-state"><div><strong>No hay viajes registrados</strong><span>Solicita un viaje y aparecerá automáticamente en tu historial.</span><br><button class="primary-button" (click)="open('viaje')">Solicitar viaje</button></div></div></ng-template>
+        </section>
+
+        <section *ngSwitchCase="'perfil'">
+          <div class="page-heading"><div><h1>Mi perfil</h1><p>Información de la sesión actual.</p></div></div>
+          <div class="profile-grid">
+            <article class="panel profile-card"><div class="large-avatar">{{ initials() }}</div><h2>Estudiante UniRide</h2><p>{{ current.email }}</p><div class="profile-tags"><span>{{ campusLabel() }}</span><span>Estudiante</span></div></article>
+            <article class="panel profile-details"><div class="panel-header"><div><h2>Datos de acceso</h2><p>Configuración activa en este dispositivo.</p></div></div><div class="panel-body detail-list"><div><span>Correo</span><strong>{{ current.email }}</strong></div><div><span>Rol</span><strong>Estudiante</strong></div><div><span>Sede</span><strong>{{ campusLabel() }}</strong></div><div><span>Inicio de sesión</span><strong>{{ current.loggedAt | date:'dd/MM/yyyy HH:mm' }}</strong></div><button class="danger-button" (click)="logout()">Cerrar sesión</button></div></article>
+          </div>
+        </section>
+      </ng-container>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navegación móvil">
+    <button [class.active]="section() === 'inicio'" (click)="open('inicio')"><span>⌂</span><span>Inicio</span></button>
+    <button [class.active]="section() === 'viaje'" (click)="open('viaje')"><span>↗</span><span>Viaje</span></button>
+    <button [class.active]="section() === 'historial'" (click)="open('historial')"><span>≡</span><span>Historial</span></button>
+    <button [class.active]="section() === 'perfil'" (click)="open('perfil')"><span>○</span><span>Perfil</span></button>
+  </nav>
+</div>

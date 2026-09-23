@@ -1,0 +1,17 @@
+{
+  "name": "UniRide",
+  "short_name": "UniRide",
+  "description": "Movilidad universitaria para estudiantes y conductores.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#104b86",
+  "icons": [
+    {
+      "src": "assets/Logo_UniRide.webp",
+      "sizes": "any",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
