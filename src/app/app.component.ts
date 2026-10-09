@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { UniRideComponent } from "./components/uniride/uniride.component";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet],
-  template: '<router-outlet />',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [UniRideComponent],
+  template: "<app-uniride />",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {}

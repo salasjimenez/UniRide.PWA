@@ -7,3 +7,12 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 Thumbs.db
+.env
+.env.*
+!.env.example
+.uniride-backups/
+*.log
+/coverage/
+/.angular/
+/dist/
+/node_modules/

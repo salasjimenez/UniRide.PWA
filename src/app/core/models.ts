@@ -1,5 +1,5 @@
-export type Campus = 'norte' | 'sur';
-export type UserRole = 'estudiante' | 'conductor';
+export type Campus = "norte" | "sur";
+export type UserRole = "estudiante" | "conductor";
 
 export interface UserSession {
   email: string;
@@ -25,7 +25,7 @@ export interface TripDraft {
 export interface TripRecord extends TripDraft {
   id: string;
   campus: Campus;
-  status: 'solicitado' | 'confirmado' | 'completado';
+  status: "solicitado" | "confirmado" | "completado";
   createdAt: string;
 }
 
@@ -37,5 +37,5 @@ export interface DriverRequest {
   fare: number;
   eta: number;
   passenger: string;
-  status: 'pendiente' | 'aceptado' | 'completado';
+  status: "pendiente" | "aceptado" | "completado";
 }

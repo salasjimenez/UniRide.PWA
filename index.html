@@ -1,162 +1,23 @@
 <!doctype html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0b3c78" />
-    <title>UniRide | App</title>
-
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" href="assets/Logo_UniRide.webp">
-    <link rel="stylesheet" href="styles.css">
-
-    <!-- Leaflet (mapa OpenStreetMap) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-</head>
-
-<body>
-    <div class="app">
-        <!-- Top bar -->
-        <header class="topbar">
-            <div class="brand">
-                <img src="assets/Logo_UniRide.webp" class="brand__logo" alt="UniRide">
-                <div class="brand__text">
-                    <div class="brand__name">UniRide</div>
-                    <div class="brand__tag">Solo U. Autónoma del Perú</div>
-                </div>
-            </div>
-            <button class="chip" id="installBtn" hidden>Instalar</button>
-        </header>
-
-        <!-- Main -->
-        <main class="main">
-            <!-- LOGIN CARD -->
-            <section class="card" id="loginCard">
-                <h2>Iniciar sesión</h2>
-                <p class="muted">Acceso exclusivo con correo institucional.</p>
-
-                <label class="label">Correo institucional</label>
-                <input class="input" id="email" type="email" placeholder="usuario@autonoma.edu.pe"
-                    autocomplete="username">
-
-                <label class="label">Contraseña</label>
-                <input class="input" id="password" type="password" placeholder="••••" autocomplete="current-password">
-
-                <button class="btn" id="loginBtn">Ingresar</button>
-                <p class="status" id="loginMsg"></p>
-            </section>
-
-            <!-- HOME (hidden until login) -->
-            <section class="card hidden" id="homeCard">
-                <div class="tabs">
-                    <button class="tab active" data-tab="viaje">Viaje</button>
-                    <button class="tab" data-tab="info">Info</button>
-                    <button class="tab" data-tab="perfil">Perfil</button>
-                </div>
-
-                <!-- TAB: VIAJE -->
-                <div class="tabpane" id="tab-viaje">
-                    <h2>Solicitar viaje</h2>
-
-                    <div class="row">
-                        <button class="btn btn--secondary" id="locBtn">📍 Mi ubicación</button>
-                        <button class="btn btn--secondary" id="centerBtn">🧭 Centrar mapa</button>
-                    </div>
-
-                    <div class="map" id="map"></div>
-
-                    <div class="grid">
-                        <div>
-                            <label class="label">Origen (auto)</label>
-                            <input class="input" id="originTxt" placeholder="Obteniendo ubicación..." disabled>
-                        </div>
-                        <div>
-                            <label class="label">Destino</label>
-                            <input class="input" id="destTxt" placeholder="Ej: Universidad Autónoma del Perú">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <button class="btn" id="routeBtn">🗺️ Ver ruta y costo</button>
-                    </div>
-
-                    <div class="summary">
-                        <div class="summary__item">
-                            <div class="muted">Distancia</div>
-                            <div class="big" id="distanceOut">—</div>
-                        </div>
-                        <div class="summary__item">
-                            <div class="muted">Tiempo aprox.</div>
-                            <div class="big" id="timeOut">—</div>
-                        </div>
-                        <div class="summary__item">
-                            <div class="muted">Total</div>
-                            <div class="big" id="fareOut">S/ —</div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn--success" id="confirmBtn" disabled>✅ Confirmar viaje</button>
-                    <p class="status" id="tripMsg"></p>
-                </div>
-
-                <!-- TAB: INFO -->
-                <div class="tabpane hidden" id="tab-info">
-                    <h2>Misión</h2>
-                    <p>Brindar transporte seguro, accesible y exclusivo para estudiantes de la Universidad Autónoma del
-                        Perú, mejorando su movilidad diaria.</p>
-
-                    <h2>Visión</h2>
-                    <p>Ser el servicio universitario de movilidad más confiable e innovador, impulsando seguridad y
-                        eficiencia en el traslado de estudiantes.</p>
-
-                    <h2>Valores</h2>
-                    <ul class="list">
-                        <li>🛡️ Seguridad</li>
-                        <li>🤝 Responsabilidad</li>
-                        <li>💡 Innovación</li>
-                        <li>🎓 Compromiso con la comunidad universitaria</li>
-                    </ul>
-
-                    <h2>Beneficios</h2>
-                    <ul class="list">
-                        <li>✅ Acceso solo con correo institucional</li>
-                        <li>✅ Conductores verificados</li>
-                        <li>✅ Rutas optimizadas</li>
-                        <li>✅ Tarifas claras</li>
-                        <li>✅ Geolocalización del viaje</li>
-                    </ul>
-                </div>
-
-                <!-- TAB: PERFIL -->
-                <div class="tabpane hidden" id="tab-perfil">
-                    <h2>Perfil</h2>
-                    <div class="profile">
-                        <div class="avatar">U</div>
-                        <div>
-                            <div class="profile__name" id="userName">Estudiante</div>
-                            <div class="muted" id="userEmail">—</div>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <button class="btn btn--danger" id="logoutBtn">Cerrar sesión</button>
-                    <p class="muted small">
-                        Nota: este login es demo (front-end). Luego lo conectamos con Firebase/Auth o tu backend.
-                    </p>
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom nav hint (mobile feel) -->
-        <footer class="bottombar">
-            <span class="muted small">UniRide PWA • Instalable • GPS • Mapa</span>
-        </footer>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js"></script>
-</body>
-
+    <title>UniRide · Universidad Autónoma del Perú</title>
+    <base href="/" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#164f8f" />
+    <meta
+      name="description"
+      content="UniRide: prototipo académico Angular para la movilidad hacia los campus Lima Norte y Lima Sur de la Universidad Autónoma del Perú."
+    />
+    <link rel="icon" type="image/webp" href="assets/Logo_UniRide.webp" />
+    <link rel="manifest" href="manifest.webmanifest" />
+  </head>
+  <body>
+    <app-root></app-root>
+    <noscript>Activa JavaScript para utilizar UniRide.</noscript>
+  </body>
 </html>

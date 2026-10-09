@@ -1,7 +1,7 @@
 <div class="dashboard-shell" *ngIf="session() as current">
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <img src="assets/Logo_UniRide.webp" alt="UniRide">
+      <img src="assets/Logo_UniRide.webp" alt="UniRide" />
       <div><strong>UniRide</strong><small>Portal del conductor</small></div>
     </div>
     <div class="sidebar-context">
@@ -9,20 +9,61 @@
       <strong>{{ campusLabel() }} · Conductor</strong>
     </div>
     <nav class="sidebar-nav" aria-label="Navegación de conductor">
-      <button class="nav-button" [class.active]="section() === 'inicio'" (click)="open('inicio')"><span class="nav-icon">⌂</span>Inicio</button>
-      <button class="nav-button" [class.active]="section() === 'solicitudes'" (click)="open('solicitudes')"><span class="nav-icon">◎</span>Solicitudes</button>
-      <button class="nav-button" [class.active]="section() === 'viaje'" (click)="open('viaje')"><span class="nav-icon">↗</span>Mi viaje</button>
-      <button class="nav-button" [class.active]="section() === 'perfil'" (click)="open('perfil')"><span class="nav-icon">○</span>Mi perfil</button>
+      <button
+        class="nav-button"
+        [class.active]="section() === 'inicio'"
+        (click)="open('inicio')"
+      >
+        <span class="nav-icon">⌂</span>Inicio
+      </button>
+      <button
+        class="nav-button"
+        [class.active]="section() === 'solicitudes'"
+        (click)="open('solicitudes')"
+      >
+        <span class="nav-icon">◎</span>Solicitudes
+      </button>
+      <button
+        class="nav-button"
+        [class.active]="section() === 'viaje'"
+        (click)="open('viaje')"
+      >
+        <span class="nav-icon">↗</span>Mi viaje
+      </button>
+      <button
+        class="nav-button"
+        [class.active]="section() === 'perfil'"
+        (click)="open('perfil')"
+      >
+        <span class="nav-icon">○</span>Mi perfil
+      </button>
     </nav>
-    <div class="sidebar-bottom"><button class="nav-button" (click)="logout()"><span class="nav-icon">↪</span>Cerrar sesión</button></div>
+    <div class="sidebar-bottom">
+      <button class="nav-button" (click)="logout()">
+        <span class="nav-icon">↪</span>Cerrar sesión
+      </button>
+    </div>
   </aside>
 
   <div class="dashboard-area">
     <header class="dashboard-topbar">
-      <div class="topbar-title"><small>Panel del conductor</small><strong>{{ campusLabel() }}</strong></div>
+      <div class="topbar-title">
+        <small>Panel del conductor</small><strong>{{ campusLabel() }}</strong>
+      </div>
       <div class="topbar-actions">
-        <button class="availability-button" [class.online]="available()" (click)="toggleAvailability()"><span></span>{{ available() ? 'Disponible' : 'No disponible' }}</button>
-        <div class="topbar-profile"><div class="profile-meta"><strong>Conductor</strong><small>{{ current.email }}</small></div><div class="profile-avatar">{{ initials() }}</div></div>
+        <button
+          class="availability-button"
+          [class.online]="available()"
+          (click)="toggleAvailability()"
+        >
+          <span></span>{{ available() ? "Disponible" : "No disponible" }}
+        </button>
+        <div class="topbar-profile">
+          <div class="profile-meta">
+            <strong>Conductor</strong><small>{{ current.email }}</small>
+          </div>
+          <div class="profile-avatar">{{ initials() }}</div>
+        </div>
       </div>
     </header>
 
@@ -31,79 +72,365 @@
 
       <ng-container [ngSwitch]="section()">
         <section *ngSwitchCase="'inicio'">
-          <div class="page-heading"><div><h1>Panel del conductor</h1><p>Controla tu disponibilidad y las solicitudes de tu sede.</p></div><span class="context-badge">{{ campusLabel() }}</span></div>
+          <div class="page-heading">
+            <div>
+              <h1>Panel del conductor</h1>
+              <p>Controla tu disponibilidad y las solicitudes de tu sede.</p>
+            </div>
+            <span class="context-badge">{{ campusLabel() }}</span>
+          </div>
 
           <div class="availability-hero" [class.online]="available()">
             <div class="availability-copy">
               <span class="availability-kicker">ESTADO DE SERVICIO</span>
-              <h2>{{ available() ? 'Estás recibiendo solicitudes' : 'Actualmente estás fuera de servicio' }}</h2>
-              <p>{{ available() ? 'Puedes aceptar solicitudes de estudiantes en tu sede.' : 'Activa tu disponibilidad cuando estés listo para realizar viajes.' }}</p>
-              <button class="availability-cta" (click)="toggleAvailability()"><span class="availability-dot"></span>{{ available() ? 'Cambiar a no disponible' : 'Activar disponibilidad' }}</button>
+              <h2>
+                {{
+                  available()
+                    ? "Estás recibiendo solicitudes"
+                    : "Actualmente estás fuera de servicio"
+                }}
+              </h2>
+              <p>
+                {{
+                  available()
+                    ? "Puedes aceptar solicitudes de estudiantes en tu sede."
+                    : "Activa tu disponibilidad cuando estés listo para realizar viajes."
+                }}
+              </p>
+              <button class="availability-cta" (click)="toggleAvailability()">
+                <span class="availability-dot"></span
+                >{{
+                  available()
+                    ? "Cambiar a no disponible"
+                    : "Activar disponibilidad"
+                }}
+              </button>
             </div>
-            <div class="driver-illustration" aria-hidden="true"><div class="driver-ring"></div><div class="driver-car">🚘</div></div>
+            <div class="driver-illustration" aria-hidden="true">
+              <div class="driver-ring"></div>
+              <div class="driver-car">🚘</div>
+            </div>
           </div>
 
           <div class="metrics-grid driver-metrics">
-            <article class="metric-card"><div class="metric-icon">◎</div><strong>{{ pendingRequests().length }}</strong><span>Solicitudes pendientes</span></article>
-            <article class="metric-card"><div class="metric-icon">✓</div><strong>{{ completedRequests().length }}</strong><span>Viajes completados</span></article>
-            <article class="metric-card"><div class="metric-icon">S/</div><strong>S/ {{ earnings() | number:'1.2-2' }}</strong><span>Ingresos registrados</span></article>
+            <article class="metric-card">
+              <div class="metric-icon">◎</div>
+              <strong>{{ pendingRequests().length }}</strong
+              ><span>Solicitudes pendientes</span>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon">✓</div>
+              <strong>{{ completedRequests().length }}</strong
+              ><span>Viajes completados</span>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon">S/</div>
+              <strong>S/ {{ earnings() | number: "1.2-2" }}</strong
+              ><span>Ingresos registrados</span>
+            </article>
           </div>
 
           <div class="two-column">
             <article class="panel request-preview">
-              <div class="panel-header"><div><h2>Solicitudes recientes</h2><p>Viajes disponibles en {{ campusLabel() }}.</p></div><button class="ghost-button compact" (click)="open('solicitudes')">Ver todas</button></div>
-              <div class="panel-body">
-                <div class="mini-request" *ngFor="let request of pendingRequests().slice(0, 3)">
-                  <div class="request-avatar">{{ request.passenger.charAt(0) }}</div>
-                  <div class="request-main"><strong>{{ request.passenger }}</strong><span>{{ request.pickup }} → {{ request.destination }}</span></div>
-                  <div class="request-price"><strong>S/ {{ request.fare | number:'1.2-2' }}</strong><span>{{ request.eta }} min</span></div>
+              <div class="panel-header">
+                <div>
+                  <h2>Solicitudes recientes</h2>
+                  <p>Viajes disponibles en {{ campusLabel() }}.</p>
                 </div>
-                <div class="empty-inline" *ngIf="!pendingRequests().length">No hay solicitudes pendientes para esta sede.</div>
+                <button
+                  class="ghost-button compact"
+                  (click)="open('solicitudes')"
+                >
+                  Ver todas
+                </button>
+              </div>
+              <div class="panel-body">
+                <div
+                  class="mini-request"
+                  *ngFor="let request of pendingRequests().slice(0, 3)"
+                >
+                  <div class="request-avatar">
+                    {{ request.passenger.charAt(0) }}
+                  </div>
+                  <div class="request-main">
+                    <strong>{{ request.passenger }}</strong
+                    ><span
+                      >{{ request.pickup }} → {{ request.destination }}</span
+                    >
+                  </div>
+                  <div class="request-price">
+                    <strong>S/ {{ request.fare | number: "1.2-2" }}</strong
+                    ><span>{{ request.eta }} min</span>
+                  </div>
+                </div>
+                <div class="empty-inline" *ngIf="!pendingRequests().length">
+                  No hay solicitudes pendientes para esta sede.
+                </div>
               </div>
             </article>
 
             <article class="panel active-preview">
-              <div class="panel-header"><div><h2>Viaje activo</h2><p>Seguimiento de tu servicio actual.</p></div></div>
-              <div class="panel-body" *ngIf="activeRequest() as active; else noActiveHome">
-                <span class="status-pill accepted">Aceptado</span>
-                <div class="active-route"><div><i></i><span><small>Recojo</small><strong>{{ active.pickup }}</strong></span></div><div><i></i><span><small>Destino</small><strong>{{ active.destination }}</strong></span></div></div>
-                <button class="secondary-button full-button" (click)="open('viaje')">Ver viaje activo</button>
+              <div class="panel-header">
+                <div>
+                  <h2>Viaje activo</h2>
+                  <p>Seguimiento de tu servicio actual.</p>
+                </div>
               </div>
-              <ng-template #noActiveHome><div class="empty-state"><div><strong>Sin viaje activo</strong><span>Acepta una solicitud para iniciar un servicio.</span></div></div></ng-template>
+              <div
+                class="panel-body"
+                *ngIf="activeRequest() as active; else noActiveHome"
+              >
+                <span class="status-pill accepted">Aceptado</span>
+                <div class="active-route">
+                  <div>
+                    <i></i
+                    ><span
+                      ><small>Recojo</small
+                      ><strong>{{ active.pickup }}</strong></span
+                    >
+                  </div>
+                  <div>
+                    <i></i
+                    ><span
+                      ><small>Destino</small
+                      ><strong>{{ active.destination }}</strong></span
+                    >
+                  </div>
+                </div>
+                <button
+                  class="secondary-button full-button"
+                  (click)="open('viaje')"
+                >
+                  Ver viaje activo
+                </button>
+              </div>
+              <ng-template #noActiveHome
+                ><div class="empty-state">
+                  <div>
+                    <strong>Sin viaje activo</strong
+                    ><span>Acepta una solicitud para iniciar un servicio.</span>
+                  </div>
+                </div></ng-template
+              >
             </article>
           </div>
         </section>
 
         <section *ngSwitchCase="'solicitudes'">
-          <div class="page-heading"><div><h1>Solicitudes disponibles</h1><p>Acepta un viaje cuando estés disponible.</p></div><span class="context-badge">{{ pendingRequests().length }} pendientes</span></div>
-          <div class="request-grid" *ngIf="pendingRequests().length; else requestsEmpty">
-            <article class="panel request-card" *ngFor="let request of pendingRequests()">
-              <div class="request-card-top"><div class="request-avatar large">{{ request.passenger.charAt(0) }}</div><div><strong>{{ request.passenger }}</strong><span>Solicitud {{ request.id }}</span></div><b>S/ {{ request.fare | number:'1.2-2' }}</b></div>
-              <div class="request-route"><div><span class="route-dot start"></span><div><small>Recojo</small><strong>{{ request.pickup }}</strong></div></div><div><span class="route-line"></span></div><div><span class="route-dot end"></span><div><small>Destino</small><strong>{{ request.destination }}</strong></div></div></div>
-              <div class="request-footer"><span>Tiempo estimado al recojo: <strong>{{ request.eta }} min</strong></span><button class="primary-button" (click)="accept(request)" [disabled]="!available() || !!activeRequest()">Aceptar viaje</button></div>
+          <div class="page-heading">
+            <div>
+              <h1>Solicitudes disponibles</h1>
+              <p>Acepta un viaje cuando estés disponible.</p>
+            </div>
+            <span class="context-badge"
+              >{{ pendingRequests().length }} pendientes</span
+            >
+          </div>
+          <div
+            class="request-grid"
+            *ngIf="pendingRequests().length; else requestsEmpty"
+          >
+            <article
+              class="panel request-card"
+              *ngFor="let request of pendingRequests()"
+            >
+              <div class="request-card-top">
+                <div class="request-avatar large">
+                  {{ request.passenger.charAt(0) }}
+                </div>
+                <div>
+                  <strong>{{ request.passenger }}</strong
+                  ><span>Solicitud {{ request.id }}</span>
+                </div>
+                <b>S/ {{ request.fare | number: "1.2-2" }}</b>
+              </div>
+              <div class="request-route">
+                <div>
+                  <span class="route-dot start"></span>
+                  <div>
+                    <small>Recojo</small><strong>{{ request.pickup }}</strong>
+                  </div>
+                </div>
+                <div><span class="route-line"></span></div>
+                <div>
+                  <span class="route-dot end"></span>
+                  <div>
+                    <small>Destino</small
+                    ><strong>{{ request.destination }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="request-footer">
+                <span
+                  >Tiempo estimado al recojo:
+                  <strong>{{ request.eta }} min</strong></span
+                ><button
+                  class="primary-button"
+                  (click)="accept(request)"
+                  [disabled]="!available() || !!activeRequest()"
+                >
+                  Aceptar viaje
+                </button>
+              </div>
             </article>
           </div>
-          <ng-template #requestsEmpty><div class="panel empty-state"><div><strong>No hay solicitudes pendientes</strong><span>Las nuevas solicitudes para {{ campusLabel() }} aparecerán aquí.</span></div></div></ng-template>
+          <ng-template #requestsEmpty
+            ><div class="panel empty-state">
+              <div>
+                <strong>No hay solicitudes pendientes</strong
+                ><span
+                  >Las nuevas solicitudes para {{ campusLabel() }} aparecerán
+                  aquí.</span
+                >
+              </div>
+            </div></ng-template
+          >
         </section>
 
         <section *ngSwitchCase="'viaje'">
-          <div class="page-heading"><div><h1>Mi viaje activo</h1><p>Gestiona el servicio que aceptaste.</p></div><span class="context-badge">{{ campusLabel() }}</span></div>
-          <div class="active-trip-layout" *ngIf="activeRequest() as active; else noActiveTrip">
-            <article class="panel active-trip-card">
-              <div class="active-trip-header"><div><span class="status-pill accepted">En servicio</span><h2>{{ active.id }}</h2><p>Pasajero: {{ active.passenger }}</p></div><div class="trip-fare"><span>Tarifa</span><strong>S/ {{ active.fare | number:'1.2-2' }}</strong></div></div>
-              <div class="journey-line"><div class="journey-point"><span class="point start"></span><div><small>Punto de recojo</small><strong>{{ active.pickup }}</strong><p>Dirígete al punto indicado para iniciar el viaje.</p></div></div><div class="journey-connector"></div><div class="journey-point"><span class="point end"></span><div><small>Destino</small><strong>{{ active.destination }}</strong><p>Confirma la llegada cuando el servicio termine.</p></div></div></div>
-              <button class="complete-button" (click)="completeActive()">✓ Finalizar viaje</button>
-            </article>
-            <aside class="panel service-summary"><div class="panel-header"><div><h2>Resumen</h2><p>Datos del servicio actual.</p></div></div><div class="panel-body summary-list"><div><span>Solicitud</span><strong>{{ active.id }}</strong></div><div><span>Pasajero</span><strong>{{ active.passenger }}</strong></div><div><span>Recojo estimado</span><strong>{{ active.eta }} min</strong></div><div><span>Sede</span><strong>{{ campusLabel() }}</strong></div><div><span>Tarifa</span><strong>S/ {{ active.fare | number:'1.2-2' }}</strong></div></div></aside>
+          <div class="page-heading">
+            <div>
+              <h1>Mi viaje activo</h1>
+              <p>Gestiona el servicio que aceptaste.</p>
+            </div>
+            <span class="context-badge">{{ campusLabel() }}</span>
           </div>
-          <ng-template #noActiveTrip><div class="panel empty-state tall"><div><div class="empty-icon">🚘</div><strong>No tienes un viaje activo</strong><span>Ve a Solicitudes y acepta un viaje disponible.</span><br><button class="primary-button" (click)="open('solicitudes')">Ver solicitudes</button></div></div></ng-template>
+          <div
+            class="active-trip-layout"
+            *ngIf="activeRequest() as active; else noActiveTrip"
+          >
+            <article class="panel active-trip-card">
+              <div class="active-trip-header">
+                <div>
+                  <span class="status-pill accepted">En servicio</span>
+                  <h2>{{ active.id }}</h2>
+                  <p>Pasajero: {{ active.passenger }}</p>
+                </div>
+                <div class="trip-fare">
+                  <span>Tarifa</span
+                  ><strong>S/ {{ active.fare | number: "1.2-2" }}</strong>
+                </div>
+              </div>
+              <div class="journey-line">
+                <div class="journey-point">
+                  <span class="point start"></span>
+                  <div>
+                    <small>Punto de recojo</small
+                    ><strong>{{ active.pickup }}</strong>
+                    <p>Dirígete al punto indicado para iniciar el viaje.</p>
+                  </div>
+                </div>
+                <div class="journey-connector"></div>
+                <div class="journey-point">
+                  <span class="point end"></span>
+                  <div>
+                    <small>Destino</small
+                    ><strong>{{ active.destination }}</strong>
+                    <p>Confirma la llegada cuando el servicio termine.</p>
+                  </div>
+                </div>
+              </div>
+              <button class="complete-button" (click)="completeActive()">
+                ✓ Finalizar viaje
+              </button>
+            </article>
+            <aside class="panel service-summary">
+              <div class="panel-header">
+                <div>
+                  <h2>Resumen</h2>
+                  <p>Datos del servicio actual.</p>
+                </div>
+              </div>
+              <div class="panel-body summary-list">
+                <div>
+                  <span>Solicitud</span><strong>{{ active.id }}</strong>
+                </div>
+                <div>
+                  <span>Pasajero</span><strong>{{ active.passenger }}</strong>
+                </div>
+                <div>
+                  <span>Recojo estimado</span
+                  ><strong>{{ active.eta }} min</strong>
+                </div>
+                <div>
+                  <span>Sede</span><strong>{{ campusLabel() }}</strong>
+                </div>
+                <div>
+                  <span>Tarifa</span
+                  ><strong>S/ {{ active.fare | number: "1.2-2" }}</strong>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <ng-template #noActiveTrip
+            ><div class="panel empty-state tall">
+              <div>
+                <div class="empty-icon">🚘</div>
+                <strong>No tienes un viaje activo</strong
+                ><span>Ve a Solicitudes y acepta un viaje disponible.</span
+                ><br /><button
+                  class="primary-button"
+                  (click)="open('solicitudes')"
+                >
+                  Ver solicitudes
+                </button>
+              </div>
+            </div></ng-template
+          >
         </section>
 
         <section *ngSwitchCase="'perfil'">
-          <div class="page-heading"><div><h1>Mi perfil</h1><p>Información y estado de tu sesión como conductor.</p></div></div>
+          <div class="page-heading">
+            <div>
+              <h1>Mi perfil</h1>
+              <p>Información y estado de tu sesión como conductor.</p>
+            </div>
+          </div>
           <div class="profile-grid">
-            <article class="panel profile-card"><div class="large-avatar">{{ initials() }}</div><h2>Conductor UniRide</h2><p>{{ current.email }}</p><div class="profile-tags"><span>{{ campusLabel() }}</span><span>Conductor</span><span [class.online-tag]="available()">{{ available() ? 'Disponible' : 'No disponible' }}</span></div></article>
-            <article class="panel profile-details"><div class="panel-header"><div><h2>Datos de acceso</h2><p>Configuración activa en este dispositivo.</p></div></div><div class="panel-body detail-list"><div><span>Correo</span><strong>{{ current.email }}</strong></div><div><span>Rol</span><strong>Conductor</strong></div><div><span>Sede</span><strong>{{ campusLabel() }}</strong></div><div><span>Estado</span><strong>{{ available() ? 'Disponible' : 'No disponible' }}</strong></div><div><span>Inicio de sesión</span><strong>{{ current.loggedAt | date:'dd/MM/yyyy HH:mm' }}</strong></div><button class="danger-button" (click)="logout()">Cerrar sesión</button></div></article>
+            <article class="panel profile-card">
+              <div class="large-avatar">{{ initials() }}</div>
+              <h2>Conductor UniRide</h2>
+              <p>{{ current.email }}</p>
+              <div class="profile-tags">
+                <span>{{ campusLabel() }}</span
+                ><span>Conductor</span
+                ><span [class.online-tag]="available()">{{
+                  available() ? "Disponible" : "No disponible"
+                }}</span>
+              </div>
+            </article>
+            <article class="panel profile-details">
+              <div class="panel-header">
+                <div>
+                  <h2>Datos de acceso</h2>
+                  <p>Configuración activa en este dispositivo.</p>
+                </div>
+              </div>
+              <div class="panel-body detail-list">
+                <div>
+                  <span>Correo</span><strong>{{ current.email }}</strong>
+                </div>
+                <div><span>Rol</span><strong>Conductor</strong></div>
+                <div>
+                  <span>Sede</span><strong>{{ campusLabel() }}</strong>
+                </div>
+                <div>
+                  <span>Estado</span
+                  ><strong>{{
+                    available() ? "Disponible" : "No disponible"
+                  }}</strong>
+                </div>
+                <div>
+                  <span>Inicio de sesión</span
+                  ><strong>{{
+                    current.loggedAt | date: "dd/MM/yyyy HH:mm"
+                  }}</strong>
+                </div>
+                <button class="danger-button" (click)="logout()">
+                  Cerrar sesión
+                </button>
+              </div>
+            </article>
           </div>
         </section>
       </ng-container>
@@ -111,9 +438,20 @@
   </div>
 
   <nav class="mobile-nav" aria-label="Navegación móvil">
-    <button [class.active]="section() === 'inicio'" (click)="open('inicio')"><span>⌂</span><span>Inicio</span></button>
-    <button [class.active]="section() === 'solicitudes'" (click)="open('solicitudes')"><span>◎</span><span>Solicitudes</span></button>
-    <button [class.active]="section() === 'viaje'" (click)="open('viaje')"><span>↗</span><span>Viaje</span></button>
-    <button [class.active]="section() === 'perfil'" (click)="open('perfil')"><span>○</span><span>Perfil</span></button>
+    <button [class.active]="section() === 'inicio'" (click)="open('inicio')">
+      <span>⌂</span><span>Inicio</span>
+    </button>
+    <button
+      [class.active]="section() === 'solicitudes'"
+      (click)="open('solicitudes')"
+    >
+      <span>◎</span><span>Solicitudes</span>
+    </button>
+    <button [class.active]="section() === 'viaje'" (click)="open('viaje')">
+      <span>↗</span><span>Viaje</span>
+    </button>
+    <button [class.active]="section() === 'perfil'" (click)="open('perfil')">
+      <span>○</span><span>Perfil</span>
+    </button>
   </nav>
 </div>

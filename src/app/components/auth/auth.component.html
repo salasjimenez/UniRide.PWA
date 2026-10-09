@@ -1,7 +1,7 @@
 <div class="auth-page">
   <header class="public-header">
     <a class="brand" href="#" aria-label="UniRide">
-      <img src="assets/Logo_UniRide.webp" alt="Logo UniRide">
+      <img src="assets/Logo_UniRide.webp" alt="Logo UniRide" />
       <span>UniRide</span>
     </a>
     <span class="institution-pill">Universidad Autónoma del Perú</span>
@@ -12,7 +12,10 @@
       <div class="hero-copy">
         <span class="eyebrow">MOVILIDAD UNIVERSITARIA</span>
         <h1>Tu ruta universitaria, más simple y segura.</h1>
-        <p>Selecciona tu sede y accede a una experiencia diseñada para estudiantes y conductores de la comunidad universitaria.</p>
+        <p>
+          Selecciona tu sede y accede a una experiencia diseñada para
+          estudiantes y conductores de la comunidad universitaria.
+        </p>
 
         <div class="hero-stats" aria-label="Características de UniRide">
           <div><strong>2</strong><span>Sedes</span></div>
@@ -24,7 +27,7 @@
         <div class="signal signal-one"></div>
         <div class="signal signal-two"></div>
         <div class="car-card">
-          <img src="assets/Logo_UniRide.webp" alt="">
+          <img src="assets/Logo_UniRide.webp" alt="" />
         </div>
       </div>
     </section>
@@ -37,54 +40,124 @@
       </div>
 
       <div class="form-section">
-        <div class="section-title"><span>1</span><div><strong>Selecciona tu sede</strong><small>Tu panel mostrará la sede elegida.</small></div></div>
+        <div class="section-title">
+          <span>1</span>
+          <div>
+            <strong>Selecciona tu sede</strong
+            ><small>Tu panel mostrará la sede elegida.</small>
+          </div>
+        </div>
         <div class="choice-grid campus-grid">
-          <button type="button" class="choice-card" [class.selected]="selectedCampus === 'norte'" (click)="selectCampus('norte')">
+          <button
+            type="button"
+            class="choice-card"
+            [class.selected]="selectedCampus === 'norte'"
+            (click)="selectCampus('norte')"
+          >
             <span class="choice-icon">N</span>
-            <span><strong>Sede Norte</strong><small>Acceder con esta sede</small></span>
+            <span
+              ><strong>Sede Norte</strong
+              ><small>Acceder con esta sede</small></span
+            >
             <span class="check">✓</span>
           </button>
-          <button type="button" class="choice-card" [class.selected]="selectedCampus === 'sur'" (click)="selectCampus('sur')">
+          <button
+            type="button"
+            class="choice-card"
+            [class.selected]="selectedCampus === 'sur'"
+            (click)="selectCampus('sur')"
+          >
             <span class="choice-icon">S</span>
-            <span><strong>Sede Sur</strong><small>Acceder con esta sede</small></span>
+            <span
+              ><strong>Sede Sur</strong
+              ><small>Acceder con esta sede</small></span
+            >
             <span class="check">✓</span>
           </button>
         </div>
       </div>
 
       <div class="form-section">
-        <div class="section-title"><span>2</span><div><strong>Selecciona tu rol</strong><small>Las funciones cambian según tu perfil.</small></div></div>
+        <div class="section-title">
+          <span>2</span>
+          <div>
+            <strong>Selecciona tu rol</strong
+            ><small>Las funciones cambian según tu perfil.</small>
+          </div>
+        </div>
         <div class="choice-grid">
-          <button type="button" class="choice-card role-card" [class.selected]="selectedRole === 'estudiante'" (click)="selectRole('estudiante')">
+          <button
+            type="button"
+            class="choice-card role-card"
+            [class.selected]="selectedRole === 'estudiante'"
+            (click)="selectRole('estudiante')"
+          >
             <span class="role-icon">🎓</span>
-            <span><strong>Estudiante</strong><small>Solicitar y revisar viajes</small></span>
+            <span
+              ><strong>Estudiante</strong
+              ><small>Solicitar y revisar viajes</small></span
+            >
             <span class="check">✓</span>
           </button>
-          <button type="button" class="choice-card role-card" [class.selected]="selectedRole === 'conductor'" (click)="selectRole('conductor')">
+          <button
+            type="button"
+            class="choice-card role-card"
+            [class.selected]="selectedRole === 'conductor'"
+            (click)="selectRole('conductor')"
+          >
             <span class="role-icon">🚘</span>
-            <span><strong>Conductor</strong><small>Gestionar solicitudes</small></span>
+            <span
+              ><strong>Conductor</strong
+              ><small>Gestionar solicitudes</small></span
+            >
             <span class="check">✓</span>
           </button>
         </div>
       </div>
 
       <form class="login-form" (ngSubmit)="login()">
-        <div class="section-title"><span>3</span><div><strong>Credenciales institucionales</strong><small>Acceso de demostración desde el frontend.</small></div></div>
+        <div class="section-title">
+          <span>3</span>
+          <div>
+            <strong>Credenciales institucionales</strong
+            ><small>Acceso de demostración desde el frontend.</small>
+          </div>
+        </div>
 
         <label for="email">Correo institucional</label>
-        <input id="email" name="email" [(ngModel)]="email" type="email" placeholder="usuario@autonoma.edu.pe" autocomplete="username">
+        <input
+          id="email"
+          name="email"
+          [(ngModel)]="email"
+          type="email"
+          placeholder="usuario@autonoma.edu.pe"
+          autocomplete="username"
+        />
 
         <label for="password">Contraseña</label>
-        <input id="password" name="password" [(ngModel)]="password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="current-password">
+        <input
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          type="password"
+          placeholder="Mínimo 8 caracteres"
+          autocomplete="current-password"
+        />
 
         <p class="form-message" *ngIf="message">{{ message }}</p>
-        <button class="primary-button login-button" type="submit" [disabled]="loading">
-          {{ loading ? 'Ingresando...' : 'Ingresar a UniRide' }}
+        <button
+          class="primary-button login-button"
+          type="submit"
+          [disabled]="loading"
+        >
+          {{ loading ? "Ingresando..." : "Ingresar a UniRide" }}
           <span>→</span>
         </button>
       </form>
     </section>
   </main>
 
-  <footer class="public-footer">UniRide · Movilidad exclusiva para la comunidad universitaria</footer>
+  <footer class="public-footer">
+    UniRide · Movilidad exclusiva para la comunidad universitaria
+  </footer>
 </div>

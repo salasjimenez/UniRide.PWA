@@ -1,0 +1,1060 @@
+<div class="app-frame" [class.slate-mode]="store.theme() === 'slate'">
+  <!-- One global header shared by access and dashboard -->
+  <header class="site-header">
+    <div class="brand-lockup" aria-label="UniRide">
+      <span class="brand-symbol"
+        ><img src="assets/Logo_UniRide.webp" alt=""
+      /></span>
+      <span class="brand-name"
+        >uni<span>ride</span><small>{{ t("subtitle") }}</small></span
+      >
+    </div>
+    <div class="header-right">
+      <a
+        class="creator"
+        href="https://www.instagram.com/pitx29/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ t("creator") }} <span aria-hidden="true">↗</span></a
+      >
+      <div class="header-controls">
+        <div class="lang-switch" aria-label="Idioma / Language">
+          <button
+            type="button"
+            [class.on]="store.language() === 'es'"
+            (click)="store.setLanguage('es')"
+            [attr.aria-pressed]="store.language() === 'es'"
+          >
+            ES
+          </button>
+          <button
+            type="button"
+            [class.on]="store.language() === 'en'"
+            (click)="store.setLanguage('en')"
+            [attr.aria-pressed]="store.language() === 'en'"
+          >
+            EN
+          </button>
+        </div>
+        <button
+          type="button"
+          class="icon-btn theme-toggle"
+          [attr.aria-label]="
+            store.theme() === 'light'
+              ? 'Activar tema gris'
+              : 'Activar tema blanco'
+          "
+          [title]="store.theme() === 'light' ? 'Tema gris' : 'Tema blanco'"
+          (click)="
+            store.setTheme(store.theme() === 'light' ? 'slate' : 'light')
+          "
+        >
+          <span aria-hidden="true">{{
+            store.theme() === "light" ? "◐" : "☼"
+          }}</span>
+        </button>
+        <button
+          *ngIf="canInstall()"
+          type="button"
+          class="install-button"
+          (click)="install()"
+        >
+          <span aria-hidden="true">↓</span> {{ t("install") }}
+        </button>
+        <button
+          *ngIf="session()"
+          type="button"
+          class="header-avatar"
+          (click)="setPage('profile')"
+          [attr.aria-label]="t('profile')"
+        >
+          {{ initials() }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <ng-container *ngIf="!session(); else dashboard">
+    <main class="access-stage" aria-label="Acceso a UniRide">
+      <!-- Las dos fotografias ocupan TODO el fondo; cada una se muestra durante 3 segundos. -->
+      <div class="login-background" aria-hidden="true">
+        <div class="login-background-photo login-background-photo--night">
+          <img
+            src="assets/campus-autonoma-nocturno.webp"
+            alt=""
+            width="500"
+            height="281"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+        <div class="login-background-photo login-background-photo--day">
+          <img
+            src="assets/campus-autonoma-diurno.webp"
+            alt=""
+            width="1220"
+            height="600"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <div class="login-background-shade"></div>
+      </div>
+
+      <section class="campus-showcase" aria-label="Movilidad universitaria">
+        <div class="showcase-content">
+          <span class="eyebrow light"
+            ><span class="tiny-dot"></span> {{ t("heroTag") }}</span
+          >
+          <div class="login-headlines">
+            <div class="login-headline login-headline--night">
+              <h1>{{ t("heroTitle") }}</h1>
+              <p>{{ t("heroDesc") }}</p>
+            </div>
+            <div class="login-headline login-headline--day">
+              <h1>
+                {{
+                  store.language() === "es"
+                    ? "Dos sedes. Un mismo camino."
+                    : "Two campuses. One shared journey."
+                }}
+              </h1>
+              <p>
+                {{
+                  store.language() === "es"
+                    ? "Conecta con Lima Norte y Lima Sur. Tu próxima ruta universitaria comienza aquí."
+                    : "Connect with North Lima and South Lima. Your next campus journey starts here."
+                }}
+              </p>
+            </div>
+          </div>
+          <div class="campus-footnotes">
+            <span><b>01</b> {{ campusName("norte") }} · Puente Piedra</span>
+            <span><b>02</b> {{ campusName("sur") }} · Villa El Salvador</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="entry-column" aria-label="Formulario de acceso">
+        <div class="entry-card">
+          <div class="entry-top">
+            <span class="overline"
+              >UNIRIDE <span aria-hidden="true">/</span>
+              {{ store.language() === "es" ? "ACCESO" : "SIGN IN" }}</span
+            >
+            <span class="entry-prototype">{{
+              store.language() === "es"
+                ? "PROTOTIPO ACADÉMICO"
+                : "ACADEMIC PROTOTYPE"
+            }}</span>
+          </div>
+          <div class="entry-introduction">
+            <div class="entry-brand-accent" aria-hidden="true"></div>
+            <h2>{{ t("chooseRole") }}</h2>
+            <p class="subtle-text">{{ t("loginNote") }}</p>
+          </div>
+          <div
+            class="role-options"
+            role="group"
+            [attr.aria-label]="t('chooseRole')"
+          >
+            <button
+              type="button"
+              class="role-option"
+              [class.picked]="role === 'estudiante'"
+              [attr.aria-pressed]="role === 'estudiante'"
+              (click)="role = 'estudiante'"
+            >
+              <span class="role-illustration student-icon" aria-hidden="true"
+                >🎓</span
+              >
+              <strong>{{ t("student") }}</strong>
+              <small>{{ t("studentDesc") }}</small>
+              <span class="role-check" aria-hidden="true">✓</span>
+            </button>
+            <button
+              type="button"
+              class="role-option"
+              [class.picked]="role === 'conductor'"
+              [attr.aria-pressed]="role === 'conductor'"
+              (click)="role = 'conductor'"
+            >
+              <span class="role-illustration driver-icon" aria-hidden="true"
+                >🚘</span
+              >
+              <strong>{{ t("driver") }}</strong>
+              <small>{{ t("driverDesc") }}</small>
+              <span class="role-check" aria-hidden="true">✓</span>
+            </button>
+          </div>
+
+          <form (ngSubmit)="login()" class="entry-form">
+            <div class="form-row">
+              <label for="full-name">{{ t("fullName") }}</label>
+              <input
+                id="full-name"
+                name="full-name"
+                [(ngModel)]="name"
+                autocomplete="name"
+                placeholder="Ej. Jhonn Pether"
+                maxlength="80"
+                required
+              />
+            </div>
+            <div class="form-row">
+              <label for="email">{{ t("email") }}</label>
+              <input
+                id="email"
+                name="email"
+                [(ngModel)]="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                placeholder="usuario@autonoma.edu.pe"
+                required
+              />
+            </div>
+            <fieldset class="campus-fieldset">
+              <legend>{{ t("campus") }}</legend>
+              <div class="campus-choices">
+                <button
+                  *ngFor="let campus of campuses"
+                  type="button"
+                  [class.picked]="selectedCampus === campus.id"
+                  [attr.aria-pressed]="selectedCampus === campus.id"
+                  (click)="selectedCampus = campus.id"
+                >
+                  <span class="campus-letter">{{ campus.accent }}</span>
+                  <span class="campus-choice-copy"
+                    ><strong>{{ campusName(campus.id) }}</strong
+                    ><small>{{ campus.district }}</small></span
+                  >
+                  <span class="campus-radio" aria-hidden="true"></span>
+                </button>
+              </div>
+            </fieldset>
+            <label class="consent-line"
+              ><input
+                type="checkbox"
+                name="accepted-terms"
+                [(ngModel)]="acceptedTerms"
+              /><span>{{ t("accept") }}</span></label
+            >
+            <div class="access-legal">
+              <button type="button" (click)="visibleLegal.set('terms')">
+                {{ t("terms") }}
+              </button>
+              ·
+              <button type="button" (click)="visibleLegal.set('privacy')">
+                {{ t("privacy") }}
+              </button>
+            </div>
+            <p class="notice error" *ngIf="notice()" role="alert">
+              {{ notice() }}
+            </p>
+            <button class="cta full" type="submit">
+              {{ t("start") }} <span aria-hidden="true">↗</span>
+            </button>
+          </form>
+          <p class="entry-disclaimer">{{ t("demo") }}</p>
+        </div>
+      </section>
+    </main>
+  </ng-container>
+
+  <ng-template #dashboard>
+    <div class="workspace" *ngIf="session() as current">
+      <aside class="app-sidebar">
+        <div class="side-user">
+          <span class="side-avatar">{{ initials() }}</span>
+          <div>
+            <b>{{ current.name }}</b
+            ><small
+              >{{
+                current.role === "estudiante" ? t("student") : t("driver")
+              }}
+              · {{ campusName(current.campus) }}</small
+            >
+          </div>
+        </div>
+        <div class="nav-heading">WORKSPACE</div>
+        <nav class="side-nav" aria-label="UniRide navigation">
+          <button [class.active]="page() === 'home'" (click)="setPage('home')">
+            <span>⌂</span> {{ t("home") }}
+          </button>
+          <button
+            *ngIf="current.role === 'estudiante'"
+            [class.active]="page() === 'trip'"
+            (click)="setPage('trip')"
+          >
+            <span>⌁</span> {{ t("trip") }}
+          </button>
+          <button
+            *ngIf="current.role === 'conductor'"
+            [class.active]="page() === 'requests'"
+            (click)="setPage('requests')"
+          >
+            <span>☷</span> {{ t("requests") }}
+            <b class="nav-count" *ngIf="pendingRequests().length">{{
+              pendingRequests().length
+            }}</b>
+          </button>
+          <button
+            [class.active]="page() === 'history'"
+            (click)="setPage('history')"
+          >
+            <span>◷</span> {{ t("history") }}
+          </button>
+          <button
+            [class.active]="page() === 'profile'"
+            (click)="setPage('profile')"
+          >
+            <span>◯</span> {{ t("profile") }}
+          </button>
+          <button [class.active]="page() === 'info'" (click)="setPage('info')">
+            <span>ⓘ</span> {{ t("info") }}
+          </button>
+        </nav>
+        <div class="side-bottom">
+          <div class="side-campus">
+            <span class="campus-marker">{{
+              current.campus === "sur" ? "S" : "N"
+            }}</span
+            ><span
+              ><small>UNIVERSIDAD AUTÓNOMA DEL PERÚ</small
+              ><strong>{{ campusName(current.campus) }}</strong></span
+            >
+          </div>
+          <button type="button" class="sign-out" (click)="logout()">
+            ↪ {{ t("logout") }}
+          </button>
+        </div>
+      </aside>
+      <main class="workspace-main">
+        <div class="workspace-breadcrumb">
+          <span>UniRide</span><span>›</span
+          ><strong>{{
+            page() === "home"
+              ? t("home")
+              : page() === "trip"
+                ? t("trip")
+                : page() === "requests"
+                  ? t("requests")
+                  : page() === "history"
+                    ? t("history")
+                    : page() === "profile"
+                      ? t("profile")
+                      : t("info")
+          }}</strong>
+        </div>
+        <p class="notice success" *ngIf="notice()" role="status">
+          {{ notice() }}
+        </p>
+
+        <ng-container *ngIf="page() === 'home'">
+          <div class="section-heading">
+            <div>
+              <span class="overline"
+                >UNIRIDE /
+                {{ current.role === "estudiante" ? "STUDENT" : "DRIVER" }}</span
+              >
+              <h1>
+                {{ t("hello") }}, {{ current.name.split(" ")[0] }}
+                <span class="wave">✳</span>
+              </h1>
+              <p>
+                {{
+                  current.role === "estudiante"
+                    ? t("homeIntro")
+                    : t("driverIntro")
+                }}
+              </p>
+            </div>
+            <span class="branch-chip">◉ {{ campusName(current.campus) }}</span>
+          </div>
+          <div class="overview-grid">
+            <div class="stat-card">
+              <span class="stat-icon blue">↗</span
+              ><strong>{{ myTrips().length }}</strong
+              ><small>{{ t("rides") }}</small>
+            </div>
+            <div class="stat-card">
+              <span class="stat-icon orange">◷</span
+              ><strong>{{
+                current.role === "estudiante"
+                  ? pendingTripCount()
+                  : pendingRequests().length
+              }}</strong
+              ><small>{{ t("pending") }}</small>
+            </div>
+            <div class="stat-card">
+              <span class="stat-icon green">S/</span
+              ><strong>S/ {{ totalSpent() | number: "1.2-2" }}</strong
+              ><small>{{ t("total") }}</small>
+            </div>
+          </div>
+          <div class="feature-layout">
+            <article class="feature-card">
+              <span class="overline">YOUR NEXT MOVE</span>
+              <h2>
+                {{
+                  current.role === "estudiante"
+                    ? t("ready")
+                    : t("driverAvailable")
+                }}
+              </h2>
+              <p>
+                {{
+                  current.role === "estudiante"
+                    ? t("readyDesc")
+                    : t("warningNoBackend")
+                }}
+              </p>
+              <button
+                *ngIf="current.role === 'estudiante'"
+                class="cta"
+                (click)="setPage('trip')"
+              >
+                {{ t("createRide") }} <span>↗</span>
+              </button>
+              <button
+                *ngIf="current.role === 'conductor'"
+                class="cta"
+                (click)="setPage('requests')"
+              >
+                {{ t("requests") }} <span>↗</span>
+              </button>
+              <div class="route-mini" aria-hidden="true">
+                <span>📍</span><i></i><span>🚙</span><i></i><span>🏫</span>
+              </div>
+            </article>
+            <article class="surface-card home-activity">
+              <div class="card-title">
+                <h2>
+                  {{
+                    current.role === "conductor"
+                      ? t("available")
+                      : t("yourTrips")
+                  }}
+                </h2>
+                <span class="mini-tag">LIVE / LOCAL</span>
+              </div>
+              <ng-container *ngIf="current.role === 'conductor'"
+                ><div class="availability-panel">
+                  <span
+                    class="availability-led"
+                    [class.on]="store.available()"
+                  ></span
+                  ><strong>{{
+                    store.available()
+                      ? t("driverAvailable")
+                      : t("driverUnavailable")
+                  }}</strong
+                  ><label class="switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="store.available()"
+                      (ngModelChange)="store.setAvailable($event)"
+                      aria-label="Driver availability" /><span></span
+                  ></label>
+                </div>
+                <p class="muted-note">
+                  {{ t("warningNoBackend") }}
+                </p></ng-container
+              >
+              <ng-container *ngIf="current.role === 'estudiante'"
+                ><div
+                  *ngFor="let ride of myTrips().slice(0, 2)"
+                  class="activity-item"
+                >
+                  <span class="activity-bullet">↗</span>
+                  <div>
+                    <strong>{{ campusName(ride.campus) }}</strong
+                    ><small
+                      >{{ ride.createdAt | date: "dd/MM/yyyy" }} ·
+                      {{ statusLabel(ride.status) }}</small
+                    >
+                  </div>
+                  <b>S/ {{ ride.fare | number: "1.2-2" }}</b>
+                </div>
+                <div *ngIf="myTrips().length === 0" class="empty-mini">
+                  {{ t("noHistory") }}
+                </div></ng-container
+              >
+            </article>
+          </div>
+        </ng-container>
+
+        <ng-container
+          *ngIf="page() === 'trip' && current.role === 'estudiante'"
+        >
+          <div class="section-heading">
+            <div>
+              <span class="overline">ROUTE PLANNER / AUTÓNOMA</span>
+              <h1>{{ t("trip") }}</h1>
+              <p>{{ t("readyDesc") }}</p>
+            </div>
+            <span class="branch-chip">📍 {{ campusName(destination) }}</span>
+          </div>
+          <div class="trip-layout">
+            <section class="surface-card trip-form">
+              <div class="card-title">
+                <h2>01 · {{ t("destination") }}</h2>
+                <span class="mini-tag">02 CAMPUSES</span>
+              </div>
+              <div class="destination-grid">
+                <button
+                  *ngFor="let campus of campuses"
+                  type="button"
+                  class="destination-choice"
+                  [class.active]="destination === campus.id"
+                  [attr.aria-pressed]="destination === campus.id"
+                  (click)="setDestination(campus.id)"
+                >
+                  <span class="destination-marker">{{ campus.accent }}</span
+                  ><b>{{ campusName(campus.id) }}</b
+                  ><small>{{ campus.address }}</small
+                  ><span class="destination-check">✓</span>
+                </button>
+              </div>
+              <div class="trip-divider"></div>
+              <div class="card-title">
+                <h2>02 · {{ t("pickup") }}</h2>
+              </div>
+              <label for="pickup-input">{{ t("pickup") }}</label>
+              <div class="pickup-input">
+                <span>◎</span
+                ><input
+                  id="pickup-input"
+                  name="pickup"
+                  [ngModel]="pickup"
+                  (ngModelChange)="onPickupChanged($event)"
+                  [placeholder]="t('pickupHint')"
+                  autocomplete="street-address"
+                />
+              </div>
+              <button type="button" class="text-action" (click)="locate()">
+                ⌖ {{ t("geo") }} {{ hasGps() ? "✓" : "" }}
+              </button>
+              <p class="notice error" *ngIf="notice()" role="alert">
+                {{ notice() }}
+              </p>
+              <button
+                type="button"
+                class="cta full"
+                [disabled]="busy()"
+                (click)="calculate()"
+              >
+                {{ busy() ? t("calculating") : t("quote") }} <span>↗</span>
+              </button>
+              <p class="muted-note">{{ t("fareHint") }}</p>
+            </section>
+            <aside class="surface-card estimate-card">
+              <div class="card-title">
+                <h2>03 · {{ t("route") }}</h2>
+                <span class="mini-tag">S/ PEN</span>
+              </div>
+              <div class="estimate-empty" *ngIf="!quote()">
+                <span class="estimate-art" aria-hidden="true">↗</span
+                ><strong>{{ t("route") }}</strong>
+                <p>{{ t("readyDesc") }}</p>
+              </div>
+              <div *ngIf="quote() as currentQuote" class="quote-result">
+                <div class="quote-route">
+                  <span class="route-start">●</span>
+                  <div>
+                    <small>{{ t("pickup") }}</small
+                    ><strong>{{ currentQuote.pickup }}</strong>
+                  </div>
+                </div>
+                <div class="route-vertical"></div>
+                <div class="quote-route">
+                  <span class="route-end">●</span>
+                  <div>
+                    <small>{{ t("destination") }}</small
+                    ><strong>{{ campusName(currentQuote.campus) }}</strong
+                    ><small>{{ campusAddress(currentQuote.campus) }}</small>
+                  </div>
+                </div>
+                <div class="quote-metrics">
+                  <div>
+                    <small>📏 {{ t("distance") }}</small
+                    ><strong
+                      >{{
+                        currentQuote.distanceKm | number: "1.1-1"
+                      }}
+                      km</strong
+                    >
+                  </div>
+                  <div>
+                    <small>⏱ {{ t("duration") }}</small
+                    ><strong>{{ currentQuote.durationMin }} min</strong>
+                  </div>
+                </div>
+                <div class="fare-details">
+                  <div>
+                    <span>{{ t("base") }}</span
+                    ><b>S/ {{ currentQuote.baseFare | number: "1.2-2" }}</b>
+                  </div>
+                  <div>
+                    <span>{{ t("distanceCharge") }}</span
+                    ><b>S/ {{ currentQuote.distanceFare | number: "1.2-2" }}</b>
+                  </div>
+                  <div>
+                    <span>{{ t("timeCharge") }}</span
+                    ><b>S/ {{ currentQuote.timeFare | number: "1.2-2" }}</b>
+                  </div>
+                </div>
+                <div class="fare-total">
+                  <span>{{ t("fare") }}</span
+                  ><strong>S/ {{ currentQuote.fare | number: "1.2-2" }}</strong>
+                </div>
+                <p
+                  class="estimate-source"
+                  [class.warn]="currentQuote.source !== 'route'"
+                >
+                  ⓘ {{ quoteSource(currentQuote.source) }}
+                </p>
+                <button class="cta full" type="button" (click)="confirmRide()">
+                  {{ t("requestRide") }} <span>↗</span>
+                </button>
+              </div>
+            </aside>
+          </div>
+        </ng-container>
+
+        <ng-container
+          *ngIf="page() === 'requests' && current.role === 'conductor'"
+        >
+          <div class="section-heading">
+            <div>
+              <span class="overline">DRIVER / REQUESTS</span>
+              <h1>{{ t("requests") }}</h1>
+              <p>{{ t("driverIntro") }}</p>
+            </div>
+            <span class="branch-chip">{{ campusName(current.campus) }}</span>
+          </div>
+          <div class="surface-card request-toolbar">
+            <div>
+              <strong>{{ t("available") }}</strong
+              ><small>{{
+                store.available()
+                  ? t("driverAvailable")
+                  : t("driverUnavailable")
+              }}</small>
+            </div>
+            <label class="switch"
+              ><input
+                type="checkbox"
+                [ngModel]="store.available()"
+                (ngModelChange)="store.setAvailable($event)"
+                aria-label="Availability" /><span></span
+            ></label>
+          </div>
+          <div
+            *ngIf="activeRide() as active"
+            class="surface-card request-item active-request"
+          >
+            <div class="card-title">
+              <h2>🚘 {{ statusLabel(active.status) }}</h2>
+              <span>{{ active.id }}</span>
+            </div>
+            <h3>{{ active.pickup }} → {{ campusName(active.campus) }}</h3>
+            <p>
+              {{ active.passenger }} · S/ {{ active.fare | number: "1.2-2" }}
+            </p>
+            <button class="cta" (click)="completeRide(active)">
+              {{ t("complete") }} ✓
+            </button>
+          </div>
+          <div
+            class="requests-list"
+            *ngIf="pendingRequests().length; else emptyRequests"
+          >
+            <article
+              *ngFor="let ride of pendingRequests()"
+              class="surface-card request-item"
+            >
+              <div class="card-title">
+                <h2>{{ ride.passenger }}</h2>
+                <span class="mini-tag">{{ ride.id }}</span>
+              </div>
+              <p>◎ {{ ride.pickup }}</p>
+              <p>
+                ⌖ {{ campusName(ride.campus) }} · {{ ride.durationMin }} min ·
+                {{ ride.distanceKm }} km
+              </p>
+              <div class="request-footer">
+                <strong>S/ {{ ride.fare | number: "1.2-2" }}</strong
+                ><button
+                  class="cta"
+                  [disabled]="!store.available() || !!activeRide()"
+                  (click)="acceptRide(ride)"
+                >
+                  {{ t("acceptRide") }} ↗
+                </button>
+              </div>
+            </article>
+          </div>
+          <ng-template #emptyRequests
+            ><div class="surface-card empty-history">
+              🚙
+              <h2>{{ t("noRequests") }}</h2>
+            </div></ng-template
+          >
+          <p class="muted-note">{{ t("warningNoBackend") }}</p>
+        </ng-container>
+
+        <ng-container *ngIf="page() === 'history'">
+          <div class="section-heading">
+            <div>
+              <span class="overline">TRIPS / HISTORY</span>
+              <h1>{{ t("history") }}</h1>
+              <p>{{ t("warningNoBackend") }}</p>
+            </div>
+            <span class="branch-chip"
+              >{{ myTrips().length }} {{ t("rides") }}</span
+            >
+          </div>
+          <div class="history-list" *ngIf="myTrips().length; else emptyHistory">
+            <article
+              *ngFor="let ride of myTrips()"
+              class="surface-card history-item"
+            >
+              <div class="history-icon">↗</div>
+              <div class="history-data">
+                <strong>{{ campusName(ride.campus) }}</strong
+                ><span
+                  >{{ ride.pickup }} → {{ campusAddress(ride.campus) }}</span
+                ><small
+                  >{{ ride.createdAt | date: "dd/MM/yyyy, HH:mm" }} ·
+                  {{ ride.id }}</small
+                >
+              </div>
+              <div class="history-cost">
+                <b>S/ {{ ride.fare | number: "1.2-2" }}</b
+                ><span
+                  class="status-pill"
+                  [class.done]="ride.status === 'completado'"
+                  >{{ statusLabel(ride.status) }}</span
+                >
+              </div>
+            </article>
+          </div>
+          <ng-template #emptyHistory
+            ><div class="surface-card empty-history">
+              🧭
+              <h2>{{ t("noHistory") }}</h2>
+              <button
+                *ngIf="current.role === 'estudiante'"
+                class="cta"
+                (click)="setPage('trip')"
+              >
+                {{ t("trip") }} ↗
+              </button>
+            </div></ng-template
+          >
+        </ng-container>
+
+        <ng-container *ngIf="page() === 'profile'">
+          <div class="section-heading">
+            <div>
+              <span class="overline">ACCOUNT / PROFILE</span>
+              <h1>{{ t("profileTitle") }}</h1>
+              <p>{{ t("session") }}</p>
+            </div>
+          </div>
+          <div class="profile-layout">
+            <article class="surface-card identity-card">
+              <div class="profile-cover">
+                <span>UNIRIDE</span><span>✳</span>
+              </div>
+              <div class="big-avatar">{{ initials() }}</div>
+              <h2>{{ current.name }}</h2>
+              <p>{{ current.email }}</p>
+              <div class="identity-chips">
+                <span
+                  >{{ current.role === "estudiante" ? "🎓" : "🚘" }}
+                  {{
+                    current.role === "estudiante" ? t("student") : t("driver")
+                  }}</span
+                ><span>📍 {{ campusName(current.campus) }}</span>
+              </div>
+            </article>
+            <article class="surface-card identity-details">
+              <h2>{{ t("session") }}</h2>
+              <dl>
+                <div>
+                  <dt>{{ t("fullName") }}</dt>
+                  <dd>{{ current.name }}</dd>
+                </div>
+                <div>
+                  <dt>{{ t("email") }}</dt>
+                  <dd>{{ current.email }}</dd>
+                </div>
+                <div>
+                  <dt>{{ t("campus") }}</dt>
+                  <dd>{{ campusAddress(current.campus) }}</dd>
+                </div>
+                <div>
+                  <dt>{{ t("login") }}</dt>
+                  <dd>{{ current.since | date: "dd/MM/yyyy HH:mm" }}</dd>
+                </div>
+              </dl>
+              <button class="logout-danger" (click)="logout()">
+                ↪ {{ t("logout") }}
+              </button>
+            </article>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="page() === 'info'">
+          <div class="section-heading">
+            <div>
+              <span class="overline">ABOUT / AUTÓNOMA</span>
+              <h1>{{ t("infoTitle") }}</h1>
+              <p>{{ t("infoIntro") }}</p>
+            </div>
+          </div>
+          <div class="info-grid">
+            <article class="surface-card info-card">
+              <span class="info-icon">🎓</span>
+              <h2>{{ t("about") }}</h2>
+              <p>{{ t("demo") }}</p>
+              <p>{{ t("warningNoBackend") }}</p>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://www.autonoma.pe/"
+                >Universidad Autónoma del Perú ↗</a
+              >
+            </article>
+            <article class="surface-card info-card">
+              <span class="info-icon">📍</span>
+              <h2>{{ campusName("norte") }}</h2>
+              <p>{{ campusAddress("norte") }}</p>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Panamericana+Norte+Km+30+Puente+Piedra"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ t("visit") }} ↗</a
+              >
+            </article>
+            <article class="surface-card info-card">
+              <span class="info-icon">🏫</span>
+              <h2>{{ campusName("sur") }}</h2>
+              <p>{{ campusAddress("sur") }}</p>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Universidad+Autonoma+del+Peru+Villa+El+Salvador"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ t("visit") }} ↗</a
+              >
+            </article>
+            <article class="surface-card info-card">
+              <span class="info-icon">🔐</span>
+              <h2>{{ t("legal") }}</h2>
+              <div class="legal-actions">
+                <button (click)="visibleLegal.set('terms')">
+                  📄 {{ t("terms") }} ↗</button
+                ><button (click)="visibleLegal.set('privacy')">
+                  🛡️ {{ t("privacy") }} ↗
+                </button>
+              </div>
+            </article>
+          </div>
+        </ng-container>
+      </main>
+      <nav class="mobile-dock" aria-label="Mobile navigation">
+        <button [class.active]="page() === 'home'" (click)="setPage('home')">
+          ⌂<small>{{ t("home") }}</small></button
+        ><button
+          [class.active]="
+            page() === (current.role === 'estudiante' ? 'trip' : 'requests')
+          "
+          (click)="setPage(current.role === 'estudiante' ? 'trip' : 'requests')"
+        >
+          ↗<small>{{
+            current.role === "estudiante" ? t("trip") : t("requests")
+          }}</small></button
+        ><button
+          [class.active]="page() === 'history'"
+          (click)="setPage('history')"
+        >
+          ◷<small>{{ t("history") }}</small></button
+        ><button
+          [class.active]="page() === 'profile'"
+          (click)="setPage('profile')"
+        >
+          ◯<small>{{ t("profile") }}</small></button
+        ><button [class.active]="page() === 'info'" (click)="setPage('info')">
+          ⓘ<small>{{ t("info") }}</small>
+        </button>
+      </nav>
+    </div>
+  </ng-template>
+
+  <footer class="site-footer">
+    <span>© {{ year }} UniRide · {{ t("demo") }}</span>
+    <div class="footer-links">
+      <a
+        href="https://www.autonoma.pe/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Web Autónoma ↗</a
+      ><a
+        href="https://www.facebook.com/autonomadelperu"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Facebook ↗</a
+      ><a
+        href="https://www.instagram.com/uautonoma/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Instagram ↗</a
+      ><a
+        href="https://www.linkedin.com/school/universidad-aut-noma-del-per-/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >LinkedIn ↗</a
+      ><a
+        href="https://www.youtube.com/@uautonomadelperu"
+        target="_blank"
+        rel="noopener noreferrer"
+        >YouTube ↗</a
+      ><button (click)="visibleLegal.set('terms')">{{ t("terms") }}</button
+      ><button (click)="visibleLegal.set('privacy')">{{ t("privacy") }}</button>
+    </div>
+  </footer>
+
+  <div
+    class="modal-backdrop"
+    *ngIf="visibleLegal() as legal"
+    (click)="visibleLegal.set(null)"
+  >
+    <section
+      class="legal-modal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="legal === 'terms' ? t('terms') : t('privacy')"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        class="modal-close"
+        type="button"
+        aria-label="Cerrar"
+        (click)="visibleLegal.set(null)"
+      >
+        ×
+      </button>
+      <span class="overline">UNIRIDE / LEGAL</span>
+      <h2>{{ legal === "terms" ? t("terms") : t("privacy") }}</h2>
+      <ng-container *ngIf="legal === 'terms' && store.language() === 'es'"
+        ><p>
+          <b>1. Naturaleza del servicio.</b> UniRide es una demostración
+          académica desarrollada para el Curso Electivo III; no es una
+          plataforma oficial de la Universidad Autónoma del Perú ni una empresa
+          de transporte.
+        </p>
+        <p>
+          <b>2. Registro y uso.</b> El acceso funciona únicamente en el
+          navegador, sin validación real de identidad. No utilices contraseñas
+          institucionales. Las solicitudes no son reservas ni generan
+          obligaciones de servicio o pago.
+        </p>
+        <p>
+          <b>3. Cotizaciones.</b> Distancia y duración proceden de servicios
+          cartográficos de terceros cuando están disponibles. La tarifa se
+          calcula con parámetros ilustrativos, puede cambiar y nunca representa
+          una cotización comercial vinculante.
+        </p>
+        <p>
+          <b>4. Limitaciones.</b> No existe sistema backend de asignación,
+          conductor verificado, pago ni seguimiento en vivo. El uso del
+          prototipo es bajo responsabilidad de quien lo prueba.
+        </p></ng-container
+      >
+      <ng-container *ngIf="legal === 'privacy' && store.language() === 'es'"
+        ><p>
+          <b>Datos tratados.</b> Este prototipo guarda en el almacenamiento
+          local del navegador el nombre, correo, rol, sede, preferencias y
+          viajes demostrativos. No solicita contraseñas ni datos bancarios.
+        </p>
+        <p>
+          <b>Ubicación.</b> El GPS requiere permiso explícito. Para calcular una
+          ruta pueden enviarse direcciones o coordenadas a
+          OpenStreetMap/Nominatim y OSRM, según las políticas de esos servicios.
+        </p>
+        <p>
+          <b>Control de datos.</b> Cerrar sesión elimina la sesión actual, pero
+          conserva el historial local de demostración. Para eliminar todos los
+          registros de prueba, borra los datos de este sitio desde los ajustes
+          del navegador.
+        </p>
+        <p>
+          <b>Privacidad de la universidad.</b> El sitio de la universidad
+          mantiene políticas independientes de este proyecto. Consúltalas en su
+          web oficial; UniRide no actúa en su nombre.
+        </p></ng-container
+      >
+      <ng-container *ngIf="legal === 'terms' && store.language() === 'en'"
+        ><p>
+          <b>1. Service scope.</b> UniRide is an academic demonstration for
+          Elective Course III. It is not an official Universidad Autónoma del
+          Perú application or a transport company.
+        </p>
+        <p>
+          <b>2. Local sign-in.</b> The prototype has no identity verification
+          and never asks for institutional passwords. Saved trip requests are
+          not real reservations or payments.
+        </p>
+        <p>
+          <b>3. Fare estimates.</b> Routing data is provided by third-party
+          mapping services when available. Fares use illustrative parameters
+          only and have no commercial validity.
+        </p>
+        <p>
+          <b>4. Limitations.</b> There is no backend dispatch, verified driver,
+          real payment or live tracking. This prototype should not be relied
+          upon for actual transportation.
+        </p></ng-container
+      >
+      <ng-container *ngIf="legal === 'privacy' && store.language() === 'en'"
+        ><p>
+          <b>Local data.</b> Your demo name, email, role, campus, preferences
+          and ride history are stored in this browser. No passwords or payment
+          information are requested.
+        </p>
+        <p>
+          <b>Location.</b> GPS access requires explicit permission. Addresses or
+          coordinates may be sent to public Nominatim/OpenStreetMap and OSRM
+          services for route estimation.
+        </p>
+        <p>
+          <b>Data control.</b> Signing out removes the current session but does
+          not erase demo ride history. Clear this website's storage in your
+          browser settings to delete saved records.
+        </p>
+        <p>
+          <b>University privacy.</b> The University's own website follows
+          separate data policies. UniRide is not its representative.
+        </p></ng-container
+      >
+      <a
+        class="legal-official"
+        href="https://www.autonoma.pe/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Sitio oficial de la Universidad Autónoma del Perú ↗</a
+      >
+      <span class="legal-divider">·</span>
+      <a
+        class="legal-official"
+        href="https://virtual.autonoma.edu.pe/uploadspublicaciones/politicas_uso_uamovil_v1.0.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Políticas UA Móvil (aplicación independiente) ↗</a
+      >
+    </section>
+  </div>
+</div>

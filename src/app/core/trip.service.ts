@@ -1,10 +1,10 @@
-import { Injectable, signal } from '@angular/core';
-import { Campus, DriverRequest, TripDraft, TripRecord } from './models';
+import { Injectable, signal } from "@angular/core";
+import { Campus, DriverRequest, TripDraft, TripRecord } from "./models";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class TripService {
-  private readonly tripsKey = 'uniride.trips';
-  private readonly requestsKey = 'uniride.driver.requests';
+  private readonly tripsKey = "uniride.trips";
+  private readonly requestsKey = "uniride.driver.requests";
 
   readonly trips = signal<TripRecord[]>(this.readTrips());
   readonly driverRequests = signal<DriverRequest[]>(this.readDriverRequests());
@@ -14,8 +14,8 @@ export class TripService {
       ...draft,
       id: `UR-${Date.now().toString().slice(-6)}`,
       campus,
-      status: 'confirmado',
-      createdAt: new Date().toISOString()
+      status: "confirmado",
+      createdAt: new Date().toISOString(),
     };
 
     const next = [record, ...this.trips()];
@@ -25,17 +25,17 @@ export class TripService {
   }
 
   acceptRequest(id: string): void {
-    this.updateRequest(id, 'aceptado');
+    this.updateRequest(id, "aceptado");
   }
 
   completeRequest(id: string): void {
-    this.updateRequest(id, 'completado');
+    this.updateRequest(id, "completado");
   }
 
-  private updateRequest(id: string, status: DriverRequest['status']): void {
+  private updateRequest(id: string, status: DriverRequest["status"]): void {
     const next = this.driverRequests().map((request) => ({
       ...request,
-      status: request.id === id ? status : request.status
+      status: request.id === id ? status : request.status,
     }));
     this.driverRequests.set(next);
     localStorage.setItem(this.requestsKey, JSON.stringify(next));
@@ -64,35 +64,35 @@ export class TripService {
 
     return [
       {
-        id: 'UR-1042',
-        campus: 'norte',
-        pickup: 'Puerta principal',
-        destination: 'Zona universitaria',
+        id: "UR-1042",
+        campus: "norte",
+        pickup: "Puerta principal",
+        destination: "Zona universitaria",
         fare: 10.8,
         eta: 4,
-        passenger: 'Andrea M.',
-        status: 'pendiente'
+        passenger: "Andrea M.",
+        status: "pendiente",
       },
       {
-        id: 'UR-1048',
-        campus: 'sur',
-        pickup: 'Punto de encuentro A',
-        destination: 'Paradero principal',
+        id: "UR-1048",
+        campus: "sur",
+        pickup: "Punto de encuentro A",
+        destination: "Paradero principal",
         fare: 8.5,
         eta: 7,
-        passenger: 'Luis R.',
-        status: 'pendiente'
+        passenger: "Luis R.",
+        status: "pendiente",
       },
       {
-        id: 'UR-1051',
-        campus: 'sur',
-        pickup: 'Punto de encuentro B',
-        destination: 'Zona residencial',
+        id: "UR-1051",
+        campus: "sur",
+        pickup: "Punto de encuentro B",
+        destination: "Zona residencial",
         fare: 12.2,
         eta: 9,
-        passenger: 'Camila P.',
-        status: 'pendiente'
-      }
+        passenger: "Camila P.",
+        status: "pendiente",
+      },
     ];
   }
 }

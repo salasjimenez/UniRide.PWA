@@ -1,16 +1,23 @@
 {
-  "name": "UniRide",
+  "name": "UniRide · Movilidad universitaria",
   "short_name": "UniRide",
-  "description": "Movilidad universitaria para estudiantes y conductores.",
-  "start_url": "./",
+  "description": "Prototipo académico Angular de movilidad universitaria.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#104b86",
+  "background_color": "#f5f7fa",
+  "theme_color": "#164f8f",
   "icons": [
     {
-      "src": "assets/Logo_UniRide.webp",
-      "sizes": "any",
-      "type": "image/webp",
+      "src": "assets/uniride-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/uniride-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
